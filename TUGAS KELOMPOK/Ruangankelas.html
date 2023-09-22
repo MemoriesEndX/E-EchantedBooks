@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Ruangan Kelas</title>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <h1>Ruangan Kelas</h1>
+                <!-- Tombol "Tambah Materi" -->
+                <input type="file" id="unggahBerkas" accept=".pdf, .doc, .docx, .ppt, .pptx" style="display: none;">
+                <button id="tambahMateriBtn" class="btn btn-primary">Tambah Materi</button>
+
+                <!-- Tombol "Unggah PDF" -->
+                <input type="file" id="unggahPDF" accept=".pdf" style="display: none;">
+                <label for="unggahPDF" class="btn btn-secondary">Unggah PDF</label>
+
+                <!-- Tombol "Unggah PowerPoint" -->
+                <input type="file" id="unggahPPT" accept=".ppt, .pptx" style="display: none;">
+                <label for="unggahPPT" class="btn btn-secondary">Unggah PowerPoint</label>
+
+                <!-- Tombol "Unggah Word" -->
+                <input type="file" id="unggahWord" accept=".doc, .docx" style="display: none;">
+                <label for="unggahWord" class="btn btn-secondary">Unggah Word</label>
+            </div>
+        </div>
+        <!-- Daftar Materi -->
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <ul id="daftarMateri" class="list-unstyled">
+                    <!-- Daftar materi akan ditampilkan di sini -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logo Untirta -->
+    <div id="logo">
+        <img src="logo untirta.png" alt="Logo Untirta">
+    </div>
+
+    <script>
+        // Daftar materi
+        const daftarMateri = [];
+
+        // Event listener untuk tombol "Tambah Materi"
+        document.getElementById("tambahMateriBtn").addEventListener("click", function() {
+            const unggahBerkas = document.getElementById("unggahBerkas");
+            unggahBerkas.click(); // Munculkan dialog unggah berkas
+        });
+
+        // Event listener untuk berkas yang diunggah
+        document.getElementById("unggahBerkas").addEventListener("change", function(event) {
+            const file = event.target.files[0]; // Mendapatkan berkas yang diunggah
+
+            if (file) {
+                const judulMateri = prompt("Masukkan judul materi:");
+                if (judulMateri) {
+                    const ext = file.name.split('.').pop(); // Mendapatkan ekstensi berkas
+                    daftarMateri.push({ judul: judulMateri, ext: ext, userMenambahkan: true, file: file });
+                    tampilkanDaftarMateri();
+                }
+            }
+        });
+
+        // Event listener untuk tombol "Unggah PDF"
+        document.getElementById("unggahPDF").addEventListener("change", function(event) {
+            handleUnggahBerkas(event, ".pdf");
+        });
+
+        // Event listener untuk tombol "Unggah PowerPoint"
+        document.getElementById("unggahPPT").addEventListener("change", function(event) {
+            handleUnggahBerkas(event, ".ppt, .pptx");
+        });
+
+        // Event listener untuk tombol "Unggah Word"
+        document.getElementById("unggahWord").addEventListener("change", function(event) {
+            handleUnggahBerkas(event, ".doc, .docx");
+        });
+
+        function handleUnggahBerkas(event, acceptedExtensions) {
+            const file = event.target.files[0]; // Mendapatkan berkas yang diunggah
+
+            if (file) {
+                const judulMateri = prompt("Masukkan judul materi:");
+                if (judulMateri) {
+                    const ext = file.name.split('.').pop(); // Mendapatkan ekstensi berkas
+                    if (acceptedExtensions.includes(ext)) {
+                        daftarMateri.push({ judul: judulMateri, ext: ext, userMenambahkan: true, file: file });
+                        tampilkanDaftarMateri();
+                    } else {
+                        alert("Ekstensi berkas tidak valid. Hanya diperbolehkan: " + acceptedExtensions);
+                    }
+                }
+            }
+        }
+
+        function tampilkanDaftarMateri() {
+            const daftarMateriElem = document.getElementById("daftarMateri");
+            daftarMateriElem.innerHTML = "";
+
+            daftarMateri.forEach(function(materi, index) {
+                const listItem = document.createElement("li");
+                listItem.className = "materi-item";}
+
+                const materiJudul = document.createElement("span");
+                materiJudul.textContent = materi.judul;
+                listItem.appendChild(materiJudul);
+
+                const ext = materi.ext.toLowerCase();
+
+                // Tambahkan ikon berdasarkan ekstensi berkas
+                let ikon;
+                switch (ext) {
+                    case "pdf":
+                        ikon = "file-pdf-o";
+                       
+                        let ikon;
+                        switch (ext) {
+                            case "pdf":
+                                ikon = "file-pdf-o";
+                                break;
+                            case "doc":
+                            case "docx":
+                                ikon = "file-word-o";
+                                break;
+                            case "ppt":
+                            case "pptx":
+                                ikon = "file-powerpoint-o";
+                                break;
+                            default:
+                                ikon = "file-o";
+                        }
+        
+                        const ikonElem = document.createElement("i");
+                        ikonElem.className = `fa fa-${ikon}`;
+                        listItem.appendChild(ikonElem);
+        
+                        if (materi.userMenambahkan) {
+                            const hapusBtn = document.createElement("button");
+                            hapusBtn.textContent = "Hapus";
+                            hapusBtn.addEventListener("click", function() {
+                                daftarMateri.splice(index, 1);
+                                tampilkanDaftarMateri();
+                            });
+                            listItem.appendChild(hapusBtn);
+                        }
+        
+                        daftarMateriElem.appendChild(listItem);
+                    });
+                }
+        
+                // Inisialisasi tampilkan daftar materi saat halaman dimuat
+                tampilkanDaftarMateri();
+            </script>
+        </body>
+        
+        </html>
+        
